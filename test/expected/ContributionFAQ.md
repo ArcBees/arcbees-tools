@@ -5,13 +5,13 @@
 
 ## Introduction
 
-Contributions are welcome ! The main goal of this page is to explain a number of points in order to ease contribution in !GwtQuery.
+Contributions are welcome ! The main goal of this page is to explain a number of points in order to ease contribution in GwtQuery.
 This page is a draft and will be improved in the future.
 
 
 ## How to import the source code into your IDE ?
 
-Before to start contributing, you have to import the source code of !GwtQuery inside your favorite IDE. This section will the different steps to import the !GwtQuery code in Eclipse. If you are not using Eclipse as IDE, you should easily adapt this section to your IDE.
+Before to start contributing, you have to import the source code of GwtQuery inside your favorite IDE. This section will the different steps to import the GwtQuery code in Eclipse. If you are not using Eclipse as IDE, you should easily adapt this section to your IDE.
 
   * Be sure you have installed git and maven and both 'mvn' and 'git' commands are in your path.
 
@@ -71,7 +71,7 @@ or by using Eclipse. Click right on any file under the src/test/java/com/google/
 If you want to know the coverage, you could install the eclipse plugin `EclEmma java code coverage` eclipse plugin and run `Coverage as -> jUnit Test`
 
 ## Code style and formating
-!GwtQuery follows the same rules/conventions than GWT regarding the code styling and formatting. These conventions can be found in this [http://code.google.com/webtoolkit/makinggwtbetter.html#codestyle page]. Please, follow these rules before committing your code !!
+GwtQuery follows the same rules/conventions than GWT regarding the code styling and formatting. These conventions can be found in this [http://code.google.com/webtoolkit/makinggwtbetter.html#codestyle page]. Please, follow these rules before committing your code !!
 
 ## How to submit your code ?
 

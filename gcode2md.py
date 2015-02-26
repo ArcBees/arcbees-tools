@@ -1,6 +1,10 @@
 import re
 import sys
 
+# Used to remove internal wiki links cancellation :
+# https://code.google.com/p/support/wiki/WikiSyntax#Internal_wiki_links
+project_name = 'GwtQuery'
+
 
 def convert_to_md(wiki_file):
     with open(wiki_file) as f:
@@ -8,6 +12,7 @@ def convert_to_md(wiki_file):
 
     wiki = remove_gplusone(wiki)
     wiki = remove_toc(wiki)
+    wiki = remove_internal_wiki_link_cancellations(wiki)
     wiki = replace_code_snippets(wiki)
     wiki = replace_numbered_lists(wiki)
     wiki = replace_headers(wiki)
@@ -21,6 +26,10 @@ def remove_gplusone(wiki):
 
 def remove_toc(wiki):
     return re.sub(r"<wiki:toc.*/>", "", wiki)
+
+
+def remove_internal_wiki_link_cancellations(wiki):
+    return wiki.replace("!{}".format(project_name), project_name)
 
 
 def replace_code_snippets(wiki):
@@ -45,9 +54,7 @@ def replace_headers(wiki):
 
 
 def replace_summary(wiki):
-    """
-    If there is a #summary tag, set all headers one level below (e.g. # -> ##) and set #summary as h1
-    """
+    """If there is a #summary tag, set all headers one level below (e.g. # -> ##) and set #summary as h1"""
     if "#summary" in wiki:
         wiki = wiki.replace("# ", "## ")
         wiki = wiki.replace("#summary", '#')
