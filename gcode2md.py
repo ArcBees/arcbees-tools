@@ -12,6 +12,7 @@ def convert_to_md(wiki_file):
 
     wiki = remove_gplusone(wiki)
     wiki = remove_toc(wiki)
+    wiki = remove_labels(wiki)
     wiki = remove_internal_wiki_link_cancellations(wiki)
     wiki = convert_links(wiki)
     wiki = convert_code_snippets(wiki)
@@ -28,6 +29,10 @@ def remove_gplusone(wiki):
 
 def remove_toc(wiki):
     return re.sub(r"<wiki:toc.*/>", "", wiki)
+
+
+def remove_labels(wiki):
+    return re.sub(r"#labels.*", "", wiki)
 
 
 def remove_internal_wiki_link_cancellations(wiki):
@@ -68,7 +73,10 @@ def replace_summary(wiki):
 
 
 def remove_extra_empty_lines(wiki):
-    return re.sub("\n\n+", "\n\n", wiki)
+    wiki = re.sub("\n\n+", "\n\n", wiki)
+    wiki = re.sub("^\n*", "", wiki)  # empty lines at beginning of file
+
+    return wiki
 
 
 if __name__ == '__main__':

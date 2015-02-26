@@ -8,6 +8,9 @@ class FileTests(TestCase):
     def test_contributionFAQ(self):
         self.assert_convert("to_convert/ContributionFAQ.wiki", "expected/ContributionFAQ.md")
 
+    def test_sources(self):
+        self.assert_convert("to_convert/Sources.wiki", "expected/Sources.md")
+
     def assert_convert(self, file_to_convert, file_expected):
         with open(file_expected) as f:
             expected = f.read()
