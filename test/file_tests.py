@@ -17,8 +17,7 @@ class FileTests(TestCase):
         self.assertMultiLineEqual(converted, expected, "\n\nDiff :\n\n" + self.diff(converted, expected))
 
     def diff(self, s1, s2):
-        # split on newlines but keep them
-        s1_arr = [line + '\n' for line in s1.split('\n')]
-        s2_arr = [line + '\n' for line in s2.split('\n')]
+        s1_arr = s1.splitlines(True)
+        s2_arr = s2.splitlines(True)
 
         return "".join(difflib.unified_diff(s1_arr, s2_arr))
