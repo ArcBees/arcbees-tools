@@ -40,7 +40,7 @@ def remove_internal_wiki_link_cancellations(wiki):
 
 
 def convert_links(wiki):
-    return re.sub(r"\[(http.*) (.*)\]", r"[\2](\1)", wiki)
+    return re.sub(r"\[(http.*?) (.*?)\]", r"[\2](\1)", wiki)
 
 
 def convert_code_snippets(wiki):

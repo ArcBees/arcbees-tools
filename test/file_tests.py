@@ -5,6 +5,9 @@ import gcode2md
 
 
 class FileTests(TestCase):
+    def test_cssGuide(self):
+        self.assert_convert("to_convert/CssGuide.wiki", "expected/CssGuide.md")
+
     def test_contributionFAQ(self):
         self.assert_convert("to_convert/ContributionFAQ.wiki", "expected/ContributionFAQ.md")
 
