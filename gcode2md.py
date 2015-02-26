@@ -17,6 +17,7 @@ def convert_to_md(wiki_file):
     wiki = convert_code_snippets(wiki)
     wiki = convert_numbered_lists(wiki)
     wiki = convert_headers(wiki)
+    wiki = remove_extra_empty_lines(wiki)
 
     return wiki
 
@@ -64,6 +65,10 @@ def replace_summary(wiki):
         wiki = wiki.replace("# ", "## ")
         wiki = wiki.replace("#summary", '#')
     return wiki
+
+
+def remove_extra_empty_lines(wiki):
+    return re.sub("\n\n+", "\n\n", wiki)
 
 
 if __name__ == '__main__':

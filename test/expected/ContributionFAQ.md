@@ -1,13 +1,9 @@
 # How to contribute in GQuery
 
-
-
-
 ## Introduction
 
 Contributions are welcome ! The main goal of this page is to explain a number of points in order to ease contribution in GwtQuery.
 This page is a draft and will be improved in the future.
-
 
 ## How to import the source code into your IDE ?
 
@@ -22,14 +18,12 @@ $ git --version
 git version 1.7.5.4
 ```
 
-
   * Checkout the project and change into the new folder created
 
 ```
 $ git clone git@github.com:gwtquery/gwtquery.git
 $ cd gwtquery/gwtquery-core
 ```
-
 
   * Normally developers run tests to assure that they don't break anything after doing any change. Nevertheless, since gQuery makes an intensive use of GWTTestCase you could have problems in your platform . We checkout periodically the code and run tests in a linux platform and if something goes wrong we fix it. If you cannot run gQuery tests, don't hesitate to continue working on the code and just notice other developers before sending a new pull request that you couldn't run tests.
 
@@ -50,7 +44,6 @@ $ mvn test
 BUILD SUCCESS
 ...
 ```
-
 
   * Install eclipse and these plugins:
     * Google plugin for eclipse (update-site: http://dl.google.com/eclipse/plugin/3.7 or 3.6 or 3.5)
