@@ -8,6 +8,9 @@ class FileTests(TestCase):
     def test_contributionFAQ(self):
         self.assert_convert("to_convert/ContributionFAQ.wiki", "expected/ContributionFAQ.md")
 
+    def test_dataBinding(self):
+        self.assert_convert("to_convert/DataBinding.wiki", "expected/DataBinding.md")
+
     def test_sources(self):
         self.assert_convert("to_convert/Sources.wiki", "expected/Sources.md")
 

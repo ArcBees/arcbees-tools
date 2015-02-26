@@ -1,4 +1,4 @@
-Sources of gwtquery are now hosted at github. 
+Sources of gwtquery are now hosted at github.
 
 https://github.com/gwtquery/gwtquery
 

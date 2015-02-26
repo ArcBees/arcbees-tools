@@ -52,12 +52,12 @@ def convert_numbered_lists(wiki):
 
 
 def convert_headers(wiki):
-    wiki = re.sub(r"====== ?(.*[^ ]) ?======", r"###### \1", wiki)
-    wiki = re.sub(r"===== ?(.*[^ ]) ?=====", r"##### \1", wiki)
-    wiki = re.sub(r"==== ?(.*[^ ]) ?====", r"#### \1", wiki)
-    wiki = re.sub(r"=== ?(.*[^ ]) ?===", r"### \1", wiki)
-    wiki = re.sub(r"== ?(.*[^ ]) ?==", r"## \1", wiki)
-    wiki = re.sub(r"= ?(.*[^ ]) ?=", r"# \1", wiki)
+    wiki = re.sub(r"^====== ?(.*[^ ]) ?======", r"###### \1", wiki, flags=re.MULTILINE)
+    wiki = re.sub(r"^===== ?(.*[^ ]) ?=====", r"##### \1", wiki, flags=re.MULTILINE)
+    wiki = re.sub(r"^==== ?(.*[^ ]) ?====", r"#### \1", wiki, flags=re.MULTILINE)
+    wiki = re.sub(r"^=== ?(.*[^ ]) ?===", r"### \1", wiki, flags=re.MULTILINE)
+    wiki = re.sub(r"^== ?(.*[^ ]) ?==", r"## \1", wiki, flags=re.MULTILINE)
+    wiki = re.sub(r"^= ?(.*[^ ]) ?=", r"# \1", wiki, flags=re.MULTILINE)
 
     wiki = replace_summary(wiki)
 
@@ -73,8 +73,9 @@ def replace_summary(wiki):
 
 
 def remove_extra_empty_lines(wiki):
-    wiki = re.sub("\n\n+", "\n\n", wiki)
-    wiki = re.sub("^\n*", "", wiki)  # empty lines at beginning of file
+    wiki = re.sub("\n\n+", "\n\n", wiki)  # no more than 1 empty line
+    wiki = re.sub("^\n*", "", wiki)  # remove empty lines at beginning of file
+    wiki = re.sub("\n*$", "\n", wiki)  # only one line at end of file
 
     return wiki
 
