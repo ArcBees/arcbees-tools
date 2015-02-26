@@ -13,10 +13,10 @@ def convert_to_md(wiki_file):
     wiki = remove_gplusone(wiki)
     wiki = remove_toc(wiki)
     wiki = remove_internal_wiki_link_cancellations(wiki)
-    wiki = replace_links(wiki)
-    wiki = replace_code_snippets(wiki)
-    wiki = replace_numbered_lists(wiki)
-    wiki = replace_headers(wiki)
+    wiki = convert_links(wiki)
+    wiki = convert_code_snippets(wiki)
+    wiki = convert_numbered_lists(wiki)
+    wiki = convert_headers(wiki)
 
     return wiki
 
@@ -33,19 +33,19 @@ def remove_internal_wiki_link_cancellations(wiki):
     return wiki.replace("!{}".format(project_name), project_name)
 
 
-def replace_links(wiki):
+def convert_links(wiki):
     return re.sub(r"\[(http.*) (.*)\]", r"[\2](\1)", wiki)
 
 
-def replace_code_snippets(wiki):
+def convert_code_snippets(wiki):
     return wiki.replace("{{{", "\n```").replace("}}}", "```\n")
 
 
-def replace_numbered_lists(wiki):
+def convert_numbered_lists(wiki):
     return wiki.replace("# ", "1. ")
 
 
-def replace_headers(wiki):
+def convert_headers(wiki):
     wiki = re.sub(r"====== ?(.*[^ ]) ?======", r"###### \1", wiki)
     wiki = re.sub(r"===== ?(.*[^ ]) ?=====", r"##### \1", wiki)
     wiki = re.sub(r"==== ?(.*[^ ]) ?====", r"#### \1", wiki)
