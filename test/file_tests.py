@@ -38,8 +38,26 @@ class FileTests(TestCase):
     def test_homePageDraft(self):
         self.assert_convert("to_convert/HomePageDraft.wiki", "expected/HomePageDraft.md")
 
+    def test_issues(self):
+        self.assert_convert("to_convert/Issues.wiki", "expected/Issues.md")
+
+    def test_jsQuery(self):
+        self.assert_convert("to_convert/JsQuery.wiki", "expected/JsQuery.md")
+
+    def test_promises(self):
+        self.assert_convert("to_convert/Promises.wiki", "expected/Promises.md")
+
+    def test_roadmap(self):
+        self.assert_convert("to_convert/Roadmap.wiki", "expected/Roadmap.md")
+
     def test_sources(self):
         self.assert_convert("to_convert/Sources.wiki", "expected/Sources.md")
+
+    def test_usingLatestSnapshot(self):
+        self.assert_convert("to_convert/UsingLatestSnapshot.wiki", "expected/UsingLatestSnapshot.md")
+
+    def test_writingPlugins(self):
+        self.assert_convert("to_convert/WritingPlugins.wiki", "expected/WritingPlugins.md")
 
     def assert_convert(self, file_to_convert, file_expected):
         with open(file_expected) as f:

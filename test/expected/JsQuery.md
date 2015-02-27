@@ -1,7 +1,6 @@
-#summary GQuery exported to javascript.
-<g:plusone annotation="inline"></g:plusone>
+# GQuery exported to javascript.
 
-= Introduction =
+## Introduction
 
 JsQuery is a project with allows to export gQuery methods and objects to javascript, so as we can produce a library which could be used as a replacement of jQuery.
 
@@ -9,11 +8,11 @@ The goal is not to compete against jquery, but to avoid including jquery in Gwt 
 
 It is also a research work demonstrating that any javascript API could be developed in java and exported to javascript, and jQuery is a good use case, since it is arguably the js API most widely used.
 
-We use the [http://code.google.com/p/gwt-exporter/ gwt-exporter] library, which is able to expose Gwt classes and methods to javascript using annotations.
+We use the [gwt-exporter](http://code.google.com/p/gwt-exporter/) library, which is able to expose Gwt classes and methods to javascript using annotations.
 
 The main goal for us, is to encourage people to wrap jQuery plugins, just including them as jsni and creating java wrappers methods around it. Maybe in the future we could have code generators to get a jquery plugin and wrap it for using with gquery.
 
-= Issues =
+## Issues
 
 Right now most jquery prototype methods are exposed but we still have to implement many of the jquery static methods.
 
@@ -21,13 +20,13 @@ Gwt-exporter introduces a high amount of extra code to deal with types and wrapp
 
 Gwt-exporter penalizes performance since it spends time figuring out which methods to call, and how to wrap parameters and returned objects.
 
-= Javascript Usage =
+## Javascript Usage
 
 * Experimental !!! *
 
 To use jsQuery as a replacement of jQuery in a non GWT project, just replace the `src` attribute in the script tag importing jQuery by the url with jsquery.js, and use it as habitual (see Known issues below).
 
-{{{
+```
 
 // Just replace jquery by jsquery
 <!-- <script src="http://code.jquery.com/jquery-latest.min.js" /> -->
@@ -39,32 +38,37 @@ To use jsQuery as a replacement of jQuery in a non GWT project, just replace the
     [...]
   });
 </script>
-}}}
+```
 
-[http://gwtquery.googlecode.com/svn/api/samples/zoom.html Here] you can see an example page where we have just replaced the original jquery.js library by the jsquery.js produced from gquery.
+[Here](http://gwtquery.googlecode.com/svn/api/samples/zoom.html) you can see an example page where we have just replaced the original jquery.js library by the jsquery.js produced from gquery.
 
-= Wrapping jQuery code in Gwt =
+## Wrapping jQuery code in Gwt
 
 * Experimental !!! *
 
 In order to use a jquery plugin in a GWT project, you have to:
- # Include the gwtexporter dependency in your project. In the case of maven:
-{{{
+ 1. Include the gwtexporter dependency in your project. In the case of maven:
+
+```
   <dependency>
      <groupId>org.timepedia.exporter</groupId>
      <artifactId>gwtexporter</artifactId>
      <version>2.4.0-SNAPSHOT</version>
      <scope>provided</scope>
   </dependency>
-}}}
- # Inherit gwtexporter in your gwt.xml file
-{{{
+```
+
+ 1. Inherit gwtexporter in your gwt.xml file
+
+```
   <inherits name='org.timepedia.exporter.Exporter' />
   <set-property name="export" value="yes" />
-}}}
- # Copy the classes [http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/com/google/gwt/query/jsquery/client/GQueryOverlay.java GQueryOverlay.java] and [http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/com/google/gwt/query/jsquery/client/JsQueryUtils.java JsQueryUtils.java] to your plugin project.
- # Add these lines in your entry point class:
-{{{
+```
+
+ 1. Copy the classes [GQueryOverlay.java](http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/com/google/gwt/query/jsquery/client/GQueryOverlay.java) and [JsQueryUtils.java](http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/com/google/gwt/query/jsquery/client/JsQueryUtils.java) to your plugin project.
+ 1. Add these lines in your entry point class:
+
+```
   public void onModuleLoad() {
   [...]
     // Export jsQuery api
@@ -78,9 +82,11 @@ In order to use a jquery plugin in a GWT project, you have to:
   [...]
   }
 
-}}}
- # Then you can do either: import the jquery javascript code in your html, or wrap it in a a java class copying the javascript in a jsni method:
-{{{
+```
+
+ 1. Then you can do either: import the jquery javascript code in your html, or wrap it in a a java class copying the javascript in a jsni method:
+
+```
 
 public abstract class MyPlugin {
   public static native void loadPlugin() /*-{
@@ -103,8 +109,9 @@ public void onModuleLoad() {
   [...]
 }
 
-}}}
- # Finally check which things of your code fails and try to get a different way to do that, or send patches to gquery team in order to improve the jsQuery api.
-   * You can see an example of jquery plugin wrapped [http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/gwtquery/jsplugins/menu/client/JsMenu.java here]
-   * [http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/gwtquery/jsplugins/menu/client/jsmenu.diff Here] you have the small differences we had to apply to make it work.
- # The last step in your plugin should be to populate js methods in the plugin to java, right now you could take a look to gwtquery-ui until we summarize that.
+```
+
+ 1. Finally check which things of your code fails and try to get a different way to do that, or send patches to gquery team in order to improve the jsQuery api.
+   * You can see an example of jquery plugin wrapped [here](http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/gwtquery/jsplugins/menu/client/JsMenu.java)
+   * [Here](http://code.google.com/p/gwtquery/source/browse/jsquery/src/main/java/gwtquery/jsplugins/menu/client/jsmenu.diff) you have the small differences we had to apply to make it work.
+ 1. The last step in your plugin should be to populate js methods in the plugin to java, right now you could take a look to gwtquery-ui until we summarize that.

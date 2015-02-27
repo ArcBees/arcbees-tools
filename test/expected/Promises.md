@@ -1,11 +1,8 @@
-#summary Deferred and Promises in gQuery
-#labels gwt,jquery,gquery,Promise,Deferred,Callbacks
-<g:plusone size="medium"></g:plusone>
-<wiki:toc max_depth="3" />
+# Deferred and Promises in gQuery
 
 *NOTE*: So far `Promises` are only available in the gwtquery-1.4.0-SNAPSHOT version.
 
-= Introduction =
+## Introduction
 
 The `Deferred` object, introduced in gQuery 1.4.0 is a chainable utility object created by calling the `GQuery.Deferred()` method.
 
@@ -15,10 +12,9 @@ The `Deferred` object is chainable, similar to the way a `GQuery` object is, but
 
 The `Promise` object provides a subset of the methods of the Deferred object (then, done, fail, always, pipe) to prevent users from changing the state of the `Deferred`. It is the object returned by asynchronous processes like `Ajax.ajax()`.
 
-The implementation GQuery `Promises` is inspired in jQuery API and is based on the [http://code.google.com/p/gwtquery/wiki/Promises CommonJS Promises/A] and [http://promises-aplus.github.io/promises-spec/ Promise/A+] specs.
+The implementation GQuery `Promises` is inspired in jQuery API and is based on the [CommonJS Promises/A](http://code.google.com/p/gwtquery/wiki/Promises) and [Promise/A+](http://promises-aplus.github.io/promises-spec/) specs.
 
-
-= Understanding Promises =
+## Understanding Promises
 
 A Promise represents a one-time event, typically the outcome of an async task like an `Ajax` call. At first, a Promise is in a pending state. Eventually, it’s either resolved (meaning the task is done) or rejected (if the task failed).
 
@@ -28,11 +24,11 @@ But you can attach more callbacks to the Promise whenever you want (even after t
 
 Plus, you can combine Promises logically into new Promises. That makes it trivially easy to write code that says, "When all of these things have happened, do this other thing."
 
-= Promises for Ajax =
+## Promises for Ajax
 
 All GQuery Ajax methods return a promise, so you could join multiple calls into a promise and call methods whenever all of then finish.
 
-{{{
+```
         Promise gettingThings = GQuery.when(
             Ajax.getJSONP(url1),
             Ajax.getJSONP(url2)
@@ -53,13 +49,13 @@ All GQuery Ajax methods return a promise, so you could join multiple calls into 
             }
           });
 
-}}}
+```
 
-= Promises for Queues and Animations =
+## Promises for Queues and Animations
 
 `GQuery.promise()` returns a promise which will observe all queued processes, so as you can chain effects and run functions when they finish.
 
-{{{
+```
 $("div").fadeIn(800)
         .delay(1200)
         .fadeOut()
@@ -68,9 +64,9 @@ $("div").fadeIn(800)
               Window.alert("Finished");
            }
         });
-}}}
+```
 
-= Promises for asynchronous GWT (Helpers) =
+## Promises for asynchronous GWT (Helpers)
 
 Apart from the `PromiseFunction`, gquery comes with helpers for GWT asynchronous implementations:
 
@@ -79,13 +75,13 @@ Apart from the `PromiseFunction`, gquery comes with helpers for GWT asynchronous
  * Use `new PromiseRPC<T>()` to wrap in a `Promise` a RPC service call.
  * Use `new PromiseRF(request<T>)` to fire a `RequestFactory` request and return a `Promise`
 
-= Custom Promises =
+## Custom Promises
 
 GQuery comes with `PromiseFunction` a utility abstract class which facilitates creation of `Promises` and easy interact to its `Deferred` object.
 
 You have to implement a function `void f(Deferred)` which will be executed just once when the promise is created. You get the deferred instance which so as you can resolve the promise.
 
-{{{
+```
   Promise doingFoo = new PromiseFunction() {
     public void f(Deferred dfd) {
       dfd.notify(1);
@@ -114,14 +110,13 @@ You have to implement a function `void f(Deferred)` which will be executed just 
             }
           });
 
-}}}
+```
 
-= Monitoring simultaneous async calls =
+## Monitoring simultaneous async calls
 
 A very common case is to put together some callbacks and monitor whether all of them are resolved or any of them is rejected. The method `when()` allows to combine multiple subordinates and return one promise which will be resolved only in the case all of them succeed.
 
-
-{{{
+```
 // Create 3 helper promises to wrap RPC callbacks
 PromiseRPC<String> promise1 = new PromiseRPC<String>();
 PromiseRPC<String> promise2 = new PromiseRPC<String>();
@@ -146,11 +141,11 @@ GQuery
           // In the fail method we can get the message of the failed call
           Exception error =  arguments(0);
       }});
-}}}
+```
 
 But `when()` also allows monitor any kind of objects, so we could mix `Promises`, `Functions`, `Effects`, `Queues` or plain objects. `done()` functions will have access to all the objects or its results depending on the case.
 
-{{{
+```
   GQuery.when(
               $("div").fadeIn(800).delay(1200).fadeOut(),
               $("p").slideDown(400),
@@ -167,14 +162,13 @@ But `when()` also allows monitor any kind of objects, so we could mix `Promises`
               // async calls return their result
               Properties p2 = arguments(4,0);
         }});
-}}}
+```
 
-
-= Chaining async calls: pipelining =
+## Chaining async calls: pipelining
 
 Sometimes it is useful to delay the execution of an asynchronous process until we have the results of a previous one. You can pipeline processes using the `Promise.then()` method. This method accept functions which can return filtered arguments, or new promises:
 
-{{{
+```
 
 Ajax.ajax("your/web/service/getData")
     .then(new Function() {public Object f(Object...args) {
@@ -184,11 +178,11 @@ Ajax.ajax("your/web/service/getData")
     .done(new Function() {public void f() {
         theFinalData = arguments(0);
     }});
-}}}
+```
 
 But the `Promise.then()` method is also useful for filtering the results of an execution, similar to `GQuery.map()` but with async callbacks:
 
-{{{
+```
 
 Ajax.ajax("your/web/service/getData")
     .then(new Function() {public Object f(Object...args) {
@@ -198,13 +192,13 @@ Ajax.ajax("your/web/service/getData")
     .done(new Function() {public void f() {
         theFinalData = arguments(0);
     }});
-}}}
+```
 
-= Declarative workflow =
+## Declarative workflow
 
 Complex ajax applications code is difficult to follow due to the excessive usage of asynchronous callbacks. gQuery offers a way to maintain your GWT code in a more `declarative` way when dealing with complex asynchronous work flows:
 
-{{{
+```
   GQuery.when(doingLogin())
         .and(gettingUserconfigFromCache())
         .or(gettingUserconfigFromServer())
@@ -212,4 +206,4 @@ Complex ajax applications code is difficult to follow due to the excessive usage
            Userconfig c = arguments(0);
            $("#username").text(c.getName);
         }});
-}}}
+```

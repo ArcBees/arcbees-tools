@@ -49,7 +49,7 @@ def convert_internal_links(wiki):
         # [Example] -> [Example](Example.md)
         replaced_line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
         # [Example#example() example description] -> [example description](Example.md#example)
-        replaced_line = re.sub(r"\[(?!http)([^ #\(]*?)(|#[^\(]*?)(?:\(\))? (.*?)\]", r"[\3](\1.md\2)", replaced_line)
+        replaced_line = re.sub(r"\[(?!http)([^ #\(]*?)(|#[^\(]*?)(?:\(\))? +(.*?)\]", r"[\3](\1.md\2)", replaced_line)
         if line != replaced_line:
             wiki = wiki.replace(line, replaced_line)
 
@@ -60,7 +60,7 @@ def convert_http_links(wiki):
     # Link only between brackets (no spaces) -> Remove brackets and ensure space after
     wiki = re.sub(r"\[(http[^ ]*?)\] *", r"\1 ", wiki)
     # Link with description
-    wiki = re.sub(r"\[(http.*?) (.*?)\]", r"[\2](\1)", wiki)
+    wiki = re.sub(r"\[(http.*?) +(.*?)\]", r"[\2](\1)", wiki)
     return wiki
 
 
