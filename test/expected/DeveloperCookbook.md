@@ -1,24 +1,21 @@
-#summary GwtQuery Cookbook
-#labels Deprecated
+# GwtQuery Cookbook
 
-= Introduction =
+## Introduction
 
 Add your content here.
 
+## Selectors
 
-= Selectors =
+## Events
 
-=Events=
-
-==I want to use GwtQuery for event handling inside my custom widget.==
+### I want to use GwtQuery for event handling inside my custom widget.
 
 The main rule is : "Bind your event handler once the widget is attached to the DOM".
 
 So, when you write your own widget, the best place for binding your event handler is inside the `onLoad()` method of the widget. Don’t forget to unbind your event henadler in the `onUnload()` method to release the resources and avoid to bind two times the same function when the widget is detached and after re-attached.
 
-{{{
+```
 public class MyWidget extends Widget {
-
 
 @Override
   protected void onLoad() {
@@ -54,14 +51,14 @@ public class MyWidget extends Widget {
   }
 }
 
-}}}
+```
 
-==I want to bind an event handler for all widget of the same type, now and in the future==
+### I want to bind an event handler for all widget of the same type, now and in the future
 Solution : Use the `live`and `delegate`methods.
 
 Imagine you want to make all labels (present now in the DOM or attached in the future) clickable and that they execute the same code when they are clicked.
 
-{{{
+```
 //all Label widget have gwt-Label css class and so will match this selector
 //we assume that we don't add the gwt-Label css class on other widget
 $(".gwt-Label").live(Event.ONCLICK, new Function() {
@@ -74,6 +71,6 @@ $(".gwt-Label").live(Event.ONCLICK, new Function() {
       }
     });
 
-}}}
+```
 
 What the code above means ? Each time that a Label (i.e an element having "gwt-Label" as css class) is clicked, the `Function`will be executed.

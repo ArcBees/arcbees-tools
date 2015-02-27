@@ -1,7 +1,7 @@
 #labels Deprecated
 == Introduction ==
 
-!GwtQuery a.k.a. gQuery is a jQuery-like API written in GWT, which allows GWT to be used in progressive enhancement scenarios where perhaps GWT widgets are too heavyweight. It can also be used to find and improve your GWT widgets. 
+!GwtQuery a.k.a. gQuery is a jQuery-like API written in GWT, which allows GWT to be used in progressive enhancement scenarios where perhaps GWT widgets are too heavyweight. It can also be used to find and improve your GWT widgets.
 
 !GwtQuery is easy to learn for those using jQuery as they share the same api, aditionally gquery adds nice features like type-safe css, compile time optimisations, etc.
 
@@ -19,7 +19,7 @@ public void onModuleLoad() {
   $("#text").hide()
     .css("width", "400px")
     .prepend("<h1>GwtQuery Rocks !</h1>");
-    
+
     //add a click handler on the button
     $("button").click(new Function(){
       public void f() {

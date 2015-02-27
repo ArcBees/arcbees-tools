@@ -20,6 +20,7 @@ def convert_to_md(wiki_file):
     wiki = convert_numbered_lists(wiki)
     wiki = convert_headers(wiki)
     wiki = convert_code_snippets_markers(wiki)
+    wiki = convert_comments(wiki)
 
     wiki = remove_extra_spaces(wiki)
     wiki = remove_extra_empty_lines(wiki)
@@ -64,7 +65,13 @@ def convert_http_links(wiki):
 
 
 def convert_code_snippets_markers(wiki):
-    return wiki.replace("{{{", "\n```").replace("}}}", "```\n")
+    wiki = re.sub(r" *\{\{\{", "\n```", wiki)
+    wiki = re.sub(r" *\}\}\}", "```\n", wiki)
+    return wiki
+
+
+def convert_comments(wiki):
+    return wiki.replace("<wiki:comment>", "<!---").replace("</wiki:comment>", "-->")
 
 
 def convert_numbered_lists(wiki):
@@ -112,10 +119,10 @@ def remove_extra_empty_lines(wiki):
 def lines_not_in_code_snippets(wiki):
     in_snippets = False
     for line in wiki.splitlines():
-        if line.startswith("{{{"):
+        if "{{{" in line:
             in_snippets = True
             continue
-        elif line.startswith("}}}"):
+        elif "}}}" in line:
             in_snippets = False
             continue
 

@@ -23,8 +23,20 @@ class FileTests(TestCase):
     def test_dataBinding(self):
         self.assert_convert("to_convert/DataBinding.wiki", "expected/DataBinding.md")
 
+    def test_developerCookbook(self):
+        self.assert_convert("to_convert/DeveloperCookbook.wiki", "expected/DeveloperCookbook.md")
+
+    def test_downloads(self):
+        self.assert_convert("to_convert/Downloads.wiki", "expected/Downloads.md")
+
     def test_gettingStarted(self):
         self.assert_convert("to_convert/GettingStarted.wiki", "expected/GettingStarted.md")
+
+    def test_gsocIdeas(self):
+        self.assert_convert("to_convert/GSOC_Ideas.wiki", "expected/GSOC_Ideas.md")
+
+    def test_homePageDraft(self):
+        self.assert_convert("to_convert/HomePageDraft.wiki", "expected/HomePageDraft.md")
 
     def test_sources(self):
         self.assert_convert("to_convert/Sources.wiki", "expected/Sources.md")

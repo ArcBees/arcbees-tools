@@ -1,6 +1,4 @@
-#labels GSOC,gwtquery,gwt,ideas,2014
-== GSOC Ideas for GQuery ==
-
+## GSOC Ideas for GQuery
 
   * Make Ajax and Data Binding run in the JVM.
   * Make gQuery run in the JVM.
