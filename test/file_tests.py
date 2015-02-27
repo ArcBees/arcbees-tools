@@ -1,7 +1,7 @@
 import difflib
 from unittest import TestCase
 
-import gcode2md
+import google_code_to_github_markdown
 
 
 class FileTests(TestCase):
@@ -63,7 +63,7 @@ class FileTests(TestCase):
         with open(file_expected) as f:
             expected = f.read()
 
-        converted = gcode2md.convert_to_md(file_to_convert)
+        converted = google_code_to_github_markdown.convert_to_md(file_to_convert)
 
         self.assertMultiLineEqual(converted, expected, "\n\nDiff :\n\n" + self.diff(converted, expected))
 

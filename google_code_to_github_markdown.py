@@ -6,14 +6,14 @@ import sys
 project_name = "GwtQuery"
 
 
-def convert_to_md(wiki_file):
-    with open(wiki_file) as f:
+def convert_to_md(wiki_file_name):
+    with open(wiki_file_name) as f:
         wiki = f.read()
 
     wiki = remove_gplusone(wiki)
     wiki = remove_toc(wiki)
     wiki = remove_labels(wiki)
-    wiki = remove_internal_wiki_link_cancellations(wiki)
+    wiki = remove_internal_link_cancellations(wiki)
 
     wiki = convert_internal_links(wiki)
     wiki = convert_http_links(wiki)
@@ -40,15 +40,15 @@ def remove_labels(wiki):
     return re.sub(r"#labels.*", "", wiki)
 
 
-def remove_internal_wiki_link_cancellations(wiki):
-    return wiki.replace("!{}".format(project_name), project_name)
+def remove_internal_link_cancellations(wiki):
+    return wiki.replace("!" + project_name, project_name)
 
 
 def convert_internal_links(wiki):
     for line in lines_not_in_code_snippets(wiki):
         # [Example] -> [Example](Example.md)
         replaced_line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
-        # [Example#example() example description] -> [example description](Example.md#example)
+        # [Example#example() link description] -> [link description](Example.md#example)
         replaced_line = re.sub(r"\[(?!http)([^ #\(]*?)(|#[^\(]*?)(?:\(\))? +(.*?)\]", r"[\3](\1.md\2)", replaced_line)
         if line != replaced_line:
             wiki = wiki.replace(line, replaced_line)
