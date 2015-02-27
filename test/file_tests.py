@@ -5,6 +5,9 @@ import gcode2md
 
 
 class FileTests(TestCase):
+    def test_ajax(self):
+        self.assert_convert("to_convert/Ajax.wiki", "expected/Ajax.md")
+
     def test_cssGuide(self):
         self.assert_convert("to_convert/CssGuide.wiki", "expected/CssGuide.md")
 

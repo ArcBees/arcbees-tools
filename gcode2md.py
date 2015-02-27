@@ -43,9 +43,9 @@ def remove_internal_wiki_link_cancellations(wiki):
 def convert_internal_links(wiki):
     for line in lines_not_in_code_snippets(wiki):
         # [Example] -> [Example](Example.md)
-        replaced_line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
+        replaced_line = re.sub(r"\[(?!http)([^ #\(\)]*?)(|#[^\(\)]*?)?(?:\(\))?\]", r"[\1](\1.md\2)", line)
         # [Example example description] -> [example description](Example.md)
-        replaced_line = re.sub(r"\[(?!http)(.*?) (.*?)\]", r"[\2](\1.md)", replaced_line)
+        replaced_line = re.sub(r"\[(?!http)([^ #\(\)]*?)(|#[^\(\)]*?)?(?:\(\))? (.*?)\]", r"[\3](\1.md\2)", replaced_line)
         if line != replaced_line:
             wiki = wiki.replace(line, replaced_line)
 
