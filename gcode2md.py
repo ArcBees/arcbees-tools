@@ -14,10 +14,11 @@ def convert_to_md(wiki_file):
     wiki = remove_toc(wiki)
     wiki = remove_labels(wiki)
     wiki = remove_internal_wiki_link_cancellations(wiki)
-    wiki = convert_links(wiki)
-    wiki = convert_code_snippets(wiki)
+    wiki = convert_internal_links(wiki)
+    wiki = convert_http_links(wiki)
     wiki = convert_numbered_lists(wiki)
     wiki = convert_headers(wiki)
+    wiki = convert_code_snippets_markers(wiki)
     wiki = remove_extra_empty_lines(wiki)
 
     return wiki
@@ -39,16 +40,33 @@ def remove_internal_wiki_link_cancellations(wiki):
     return wiki.replace("!{}".format(project_name), project_name)
 
 
-def convert_links(wiki):
+def convert_internal_links(wiki):
+    for line in lines_not_in_code_snippets(wiki):
+        # [Example] -> [Example](Example.md)
+        replaced_line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
+        # [Example example description] -> [example description](Example.md)
+        replaced_line = re.sub(r"\[(?!http)(.*?) (.*?)\]", r"[\2](\1.md)", replaced_line)
+        if line != replaced_line:
+            wiki = wiki.replace(line, replaced_line)
+
+    return wiki
+
+
+def convert_http_links(wiki):
     return re.sub(r"\[(http.*?) (.*?)\]", r"[\2](\1)", wiki)
 
 
-def convert_code_snippets(wiki):
+def convert_code_snippets_markers(wiki):
     return wiki.replace("{{{", "\n```").replace("}}}", "```\n")
 
 
 def convert_numbered_lists(wiki):
-    return wiki.replace("# ", "1. ")
+    for line in lines_not_in_code_snippets(wiki):
+        replaced_line = line.replace("# ", "1. ")
+        if line != replaced_line:
+            wiki = wiki.replace(line, replaced_line)
+
+    return wiki
 
 
 def convert_headers(wiki):
@@ -78,6 +96,20 @@ def remove_extra_empty_lines(wiki):
     wiki = re.sub("\n*$", "\n", wiki)  # only one line at end of file
 
     return wiki
+
+
+def lines_not_in_code_snippets(wiki):
+    in_snippets = False
+    for line in wiki.splitlines():
+        if line.startswith("{{{"):
+            in_snippets = True
+            continue
+        elif line.startswith("}}}"):
+            in_snippets = False
+            continue
+
+        if not in_snippets:
+            yield line
 
 
 if __name__ == '__main__':

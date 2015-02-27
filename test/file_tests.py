@@ -14,6 +14,9 @@ class FileTests(TestCase):
     def test_dataBinding(self):
         self.assert_convert("to_convert/DataBinding.wiki", "expected/DataBinding.md")
 
+    def test_gettingStarted(self):
+        self.assert_convert("to_convert/GettingStarted.wiki", "expected/GettingStarted.md")
+
     def test_sources(self):
         self.assert_convert("to_convert/Sources.wiki", "expected/Sources.md")
 
