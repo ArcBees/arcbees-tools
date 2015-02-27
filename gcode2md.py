@@ -14,11 +14,14 @@ def convert_to_md(wiki_file):
     wiki = remove_toc(wiki)
     wiki = remove_labels(wiki)
     wiki = remove_internal_wiki_link_cancellations(wiki)
+
     wiki = convert_internal_links(wiki)
     wiki = convert_http_links(wiki)
     wiki = convert_numbered_lists(wiki)
     wiki = convert_headers(wiki)
     wiki = convert_code_snippets_markers(wiki)
+
+    wiki = remove_extra_spaces(wiki)
     wiki = remove_extra_empty_lines(wiki)
 
     return wiki
@@ -53,7 +56,11 @@ def convert_internal_links(wiki):
 
 
 def convert_http_links(wiki):
-    return re.sub(r"\[(http.*?) (.*?)\]", r"[\2](\1)", wiki)
+    # Link only between brackets (no spaces) -> Remove brackets and ensure space after
+    wiki = re.sub(r"\[(http[^ ]*?)\] *", r"\1 ", wiki)
+    # Link with description
+    wiki = re.sub(r"\[(http.*?) (.*?)\]", r"[\2](\1)", wiki)
+    return wiki
 
 
 def convert_code_snippets_markers(wiki):
@@ -88,6 +95,10 @@ def replace_summary(wiki):
         wiki = wiki.replace("# ", "## ")
         wiki = wiki.replace("#summary", '#')
     return wiki
+
+
+def remove_extra_spaces(wiki):
+    return "\n".join(line.rstrip() for line in wiki.splitlines())
 
 
 def remove_extra_empty_lines(wiki):

@@ -8,11 +8,17 @@ class FileTests(TestCase):
     def test_ajax(self):
         self.assert_convert("to_convert/Ajax.wiki", "expected/Ajax.md")
 
+    def test_contents(self):
+        self.assert_convert("to_convert/Contents.wiki", "expected/Contents.md")
+
     def test_cssGuide(self):
         self.assert_convert("to_convert/CssGuide.wiki", "expected/CssGuide.md")
 
     def test_contributionFAQ(self):
         self.assert_convert("to_convert/ContributionFAQ.wiki", "expected/ContributionFAQ.md")
+
+    def test_creatingNewApplications(self):
+        self.assert_convert("to_convert/CreatingNewApplications.wiki", "expected/CreatingNewApplications.md")
 
     def test_dataBinding(self):
         self.assert_convert("to_convert/DataBinding.wiki", "expected/DataBinding.md")
