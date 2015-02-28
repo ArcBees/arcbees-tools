@@ -1,69 +1,78 @@
 import difflib
-from unittest import TestCase
+import unittest
+import os
 
 import google_code_to_github_markdown
 
 
-class FileTests(TestCase):
+def get_to_convert_path(filename):
+    return os.path.join(os.path.dirname(__file__), "to_convert", filename)
+
+
+def get_expected_path(filename):
+    return os.path.join(os.path.dirname(__file__), "expected", filename)
+
+
+class FileTests(unittest.TestCase):
     def test_ajax(self):
-        self.assert_convert("to_convert/Ajax.wiki", "expected/Ajax.md")
+        self.assert_convert("Ajax.wiki", "Ajax.md")
 
     def test_contents(self):
-        self.assert_convert("to_convert/Contents.wiki", "expected/Contents.md")
+        self.assert_convert("Contents.wiki", "Contents.md")
 
     def test_cssGuide(self):
-        self.assert_convert("to_convert/CssGuide.wiki", "expected/CssGuide.md")
+        self.assert_convert("CssGuide.wiki", "CssGuide.md")
 
     def test_contributionFAQ(self):
-        self.assert_convert("to_convert/ContributionFAQ.wiki", "expected/ContributionFAQ.md")
+        self.assert_convert("ContributionFAQ.wiki", "ContributionFAQ.md")
 
     def test_creatingNewApplications(self):
-        self.assert_convert("to_convert/CreatingNewApplications.wiki", "expected/CreatingNewApplications.md")
+        self.assert_convert("CreatingNewApplications.wiki", "CreatingNewApplications.md")
 
     def test_dataBinding(self):
-        self.assert_convert("to_convert/DataBinding.wiki", "expected/DataBinding.md")
+        self.assert_convert("DataBinding.wiki", "DataBinding.md")
 
     def test_developerCookbook(self):
-        self.assert_convert("to_convert/DeveloperCookbook.wiki", "expected/DeveloperCookbook.md")
+        self.assert_convert("DeveloperCookbook.wiki", "DeveloperCookbook.md")
 
     def test_downloads(self):
-        self.assert_convert("to_convert/Downloads.wiki", "expected/Downloads.md")
+        self.assert_convert("Downloads.wiki", "Downloads.md")
 
     def test_gettingStarted(self):
-        self.assert_convert("to_convert/GettingStarted.wiki", "expected/GettingStarted.md")
+        self.assert_convert("GettingStarted.wiki", "GettingStarted.md")
 
     def test_gsocIdeas(self):
-        self.assert_convert("to_convert/GSOC_Ideas.wiki", "expected/GSOC_Ideas.md")
+        self.assert_convert("GSOC_Ideas.wiki", "GSOC_Ideas.md")
 
     def test_homePageDraft(self):
-        self.assert_convert("to_convert/HomePageDraft.wiki", "expected/HomePageDraft.md")
+        self.assert_convert("HomePageDraft.wiki", "HomePageDraft.md")
 
     def test_issues(self):
-        self.assert_convert("to_convert/Issues.wiki", "expected/Issues.md")
+        self.assert_convert("Issues.wiki", "Issues.md")
 
     def test_jsQuery(self):
-        self.assert_convert("to_convert/JsQuery.wiki", "expected/JsQuery.md")
+        self.assert_convert("JsQuery.wiki", "JsQuery.md")
 
     def test_promises(self):
-        self.assert_convert("to_convert/Promises.wiki", "expected/Promises.md")
+        self.assert_convert("Promises.wiki", "Promises.md")
 
     def test_roadmap(self):
-        self.assert_convert("to_convert/Roadmap.wiki", "expected/Roadmap.md")
+        self.assert_convert("Roadmap.wiki", "Roadmap.md")
 
     def test_sources(self):
-        self.assert_convert("to_convert/Sources.wiki", "expected/Sources.md")
+        self.assert_convert("Sources.wiki", "Sources.md")
 
     def test_usingLatestSnapshot(self):
-        self.assert_convert("to_convert/UsingLatestSnapshot.wiki", "expected/UsingLatestSnapshot.md")
+        self.assert_convert("UsingLatestSnapshot.wiki", "UsingLatestSnapshot.md")
 
     def test_writingPlugins(self):
-        self.assert_convert("to_convert/WritingPlugins.wiki", "expected/WritingPlugins.md")
+        self.assert_convert("WritingPlugins.wiki", "WritingPlugins.md")
 
     def assert_convert(self, file_to_convert, file_expected):
-        with open(file_expected) as f:
+        with open(get_expected_path(file_expected)) as f:
             expected = f.read()
 
-        converted = google_code_to_github_markdown.convert_to_md(file_to_convert)
+        converted = google_code_to_github_markdown.convert_to_md(get_to_convert_path(file_to_convert))
 
         self.assertMultiLineEqual(converted, expected, "\n\nDiff :\n\n" + self.diff(converted, expected))
 
@@ -72,3 +81,7 @@ class FileTests(TestCase):
         s2_arr = s2.splitlines(True)
 
         return "".join(difflib.unified_diff(s1_arr, s2_arr))
+
+
+if __name__ == '__main__':
+    unittest.main()
