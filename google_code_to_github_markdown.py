@@ -1,5 +1,6 @@
+import argparse
 import re
-import sys
+import os
 
 # Used to remove internal wiki links cancellation :
 # https://code.google.com/p/support/wiki/WikiSyntax#Internal_wiki_links
@@ -131,4 +132,26 @@ def lines_not_in_code_snippets(wiki):
 
 
 if __name__ == '__main__':
-    print(convert_to_md(sys.argv[1]))
+    # CLI
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    meg = parser.add_mutually_exclusive_group()
+    meg.add_argument("--file", help="convert file instead of directory, result printed to stdout")
+    meg.add_argument("dir", nargs='?', default='.', help="path to directory containing .wiki files\n"
+                                                         "defaults to current directory\n"
+                                                         "outputs to dir/output/")
+    args = parser.parse_args()
+
+    if args.file:  # --file argument specified
+        print(convert_to_md(args.file))
+    else:  # directory
+        os.chdir(args.folder)
+
+        output_dir = "output/"
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
+
+        wiki_file_names = (f for f in os.listdir('.') if f.endswith(".wiki"))
+        for wiki_file_name in wiki_file_names:
+            output_file_name = os.path.join(output_dir, wiki_file_name.replace(".wiki", ".md"))
+            with open(output_file_name, "w") as output_file:
+                output_file.write(convert_to_md(wiki_file_name))
