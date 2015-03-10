@@ -4,6 +4,7 @@ Convert documentation from Google Code to GitHub.
 For example outputs, see the test folder (e.g. converting `to_convert/GettingStarted.wiki` will generate `expected/GettingStarted.md`).
 
 ## Usage
+Should work for both python 2 and 3.
 
 ```
 $ python googlecode_wiki_to_github_markdown.py -h
