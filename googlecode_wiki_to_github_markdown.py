@@ -144,9 +144,9 @@ if __name__ == '__main__':
     if args.file:  # --file argument specified
         print(convert_to_md(args.file))
     else:  # directory
-        os.chdir(args.folder)
+        os.chdir(args.dir)
 
-        output_dir = "output/"
+        output_dir = "output"
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
 
@@ -155,3 +155,5 @@ if __name__ == '__main__':
             output_file_name = os.path.join(output_dir, wiki_file_name.replace(".wiki", ".md"))
             with open(output_file_name, "w") as output_file:
                 output_file.write(convert_to_md(wiki_file_name))
+
+        print("Output directory: " + os.path.join(os.getcwd(), output_dir))
