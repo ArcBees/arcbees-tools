@@ -4,7 +4,6 @@ Convert documentation from Google Code to GitHub.
 For example outputs, see the test folder (e.g. converting `to_convert/GettingStarted.wiki` will generate `expected/GettingStarted.md`).
 
 ## Usage
-Should work for both python 2 and 3.
 
 ```
 $ python googlecode_wiki_to_github_markdown.py -h
@@ -38,3 +37,6 @@ $ python -m unittest test.file_tests
 ```
 
 Or you can add the root folder to your `PYTHONPATH` and run the test file directly.
+
+## Python version
+Works for both python2 and python3. You can run the tests to confirm.
