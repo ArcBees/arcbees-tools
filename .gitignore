@@ -1,0 +1,9 @@
+# JetBrains IDE
+*.iml
+.idea/
+
+# Python
+*.pyc
+__pycache__
+
+*.jpg
