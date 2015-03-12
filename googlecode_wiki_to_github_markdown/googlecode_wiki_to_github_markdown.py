@@ -2,19 +2,15 @@ import argparse
 import re
 import os
 
-# Used to remove internal wiki links cancellation :
-# https://code.google.com/p/support/wiki/WikiSyntax#Internal_wiki_links
-project_name = "GwtQuery"
 
-
-def convert_to_md(wiki_file_name):
+def convert_to_md(wiki_file_name, project_name=None):
     with open(wiki_file_name) as f:
         wiki = f.read()
 
     wiki = remove_gplusone(wiki)
     wiki = remove_toc(wiki)
     wiki = remove_labels(wiki)
-    wiki = remove_internal_link_cancellations(wiki)
+    wiki = remove_internal_link_cancellations(wiki, project_name)
 
     wiki = convert_internal_links(wiki)
     wiki = convert_http_links(wiki)
@@ -41,8 +37,10 @@ def remove_labels(wiki):
     return re.sub(r"#labels.*", "", wiki)
 
 
-def remove_internal_link_cancellations(wiki):
-    return wiki.replace("!" + project_name, project_name)
+def remove_internal_link_cancellations(wiki, project_name):
+    if project_name:
+        wiki = wiki.replace("!" + project_name, project_name)
+    return wiki
 
 
 def convert_internal_links(wiki):
@@ -133,18 +131,21 @@ def lines_not_in_code_snippets(wiki):
 
 if __name__ == '__main__':
     # CLI
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-    meg = parser.add_mutually_exclusive_group()
-    meg.add_argument("--file", help="convert file instead of directory, result printed to stdout")
-    meg.add_argument("dir", nargs='?', default='.', help="path to directory containing .wiki files\n"
-                                                         "defaults to current directory\n"
-                                                         "outputs to dir/output/")
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
+                                     description="Outputs to path/output, or stdout if -f specified")
+    parser.add_argument("-p", "--project-name",
+                        help="used to remove internal wiki links cancellation\n"
+                             "(see https://code.google.com/p/support/wiki/WikiSyntax#Internal_wiki_links)\n"
+                             "will simply skip this step if not specified")
+    parser.add_argument("-f", "--file", action="store_true",
+                        help="convert file instead of directory")
+    parser.add_argument("path", help="path to directory containing .wiki files, or to the file if -f specified")
     args = parser.parse_args()
 
-    if args.file:  # --file argument specified
-        print(convert_to_md(args.file))
+    if args.file:  # convert file instead of directory
+        print(convert_to_md(args.path, args.project_name))
     else:  # directory
-        os.chdir(args.dir)
+        os.chdir(args.path)
 
         output_dir = "output"
         if not os.path.exists(output_dir):
@@ -154,6 +155,6 @@ if __name__ == '__main__':
         for wiki_file_name in wiki_file_names:
             output_file_name = os.path.join(output_dir, wiki_file_name.replace(".wiki", ".md"))
             with open(output_file_name, "w") as output_file:
-                output_file.write(convert_to_md(wiki_file_name))
+                output_file.write(convert_to_md(wiki_file_name, args.project_name))
 
         print("Output directory: " + os.path.join(os.getcwd(), output_dir))

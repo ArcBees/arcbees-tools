@@ -72,7 +72,7 @@ class FileTests(unittest.TestCase):
         with open(get_expected_path(file_expected)) as f:
             expected = f.read()
 
-        converted = googlecode_wiki_to_github_markdown.convert_to_md(get_to_convert_path(file_to_convert))
+        converted = googlecode_wiki_to_github_markdown.convert_to_md(get_to_convert_path(file_to_convert), "GwtQuery")
 
         self.assertMultiLineEqual(converted, expected, "\n\nDiff :\n\n" + self.diff(converted, expected))
 

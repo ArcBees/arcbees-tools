@@ -7,26 +7,40 @@ For example outputs, see the test folder (e.g. converting `to_convert/GettingSta
 
 ```
 $ python googlecode_wiki_to_github_markdown.py -h
-usage: googlecode_wiki_to_github_markdown.py [-h] [--file FILE | dir]
+usage: googlecode_wiki_to_github_markdown.py [-h] [-p PROJECT_NAME] [-f] path
+
+Outputs to path/output, or stdout if -f specified
 
 positional arguments:
-  dir          path to directory containing .wiki files
-               defaults to current directory
-               outputs to dir/output/
+  path                  path to directory containing .wiki files, or to the file if -f specified
 
 optional arguments:
-  -h, --help   show this help message and exit
-  --file FILE  convert file instead of directory, result printed to stdout
+  -h, --help            show this help message and exit
+  -p PROJECT_NAME, --project-name PROJECT_NAME
+                        used to remove internal wiki links cancellation
+                        (see https://code.google.com/p/support/wiki/WikiSyntax#Internal_wiki_links)
+                        will simply skip this step if not specified
+  -f, --file            convert file instead of directory
 ```
 
 Examples:
-* In folder containing .wiki files : `$ python googlecode_wiki_to_github_markdown.py`
-* In this project root file : `$ python googlecode_wiki_to_github_markdown.py test/to_convert/`
-* Single file : `$ python googlecode_wiki_to_github_markdown.py --file test/to_convert/GettingStarted.wiki`
+* Script in same folder than .wiki files:
 
-_(Optional)_
-Update the `project_name` constant (used to remove internal wiki links cancellation:
-https://code.google.com/p/support/wiki/WikiSyntax#Internal_wiki_links).
+```
+$ python googlecode_wiki_to_github_markdown.py .
+```
+
+* In this project root file:
+
+```
+$ python googlecode_wiki_to_github_markdown.py -p GwtQuery test/to_convert/
+```
+
+* Single file:
+
+```
+$ python googlecode_wiki_to_github_markdown.py -p GwtQuery -f test/to_convert/GettingStarted.wiki
+```
 
 ## Running tests
 In the root folder, run any of these commands:
