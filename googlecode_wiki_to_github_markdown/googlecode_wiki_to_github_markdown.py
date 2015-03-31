@@ -44,15 +44,14 @@ def remove_internal_link_cancellations(wiki, project_name):
 
 
 def convert_internal_links(wiki):
-    for line in lines_not_in_code_snippets(wiki):
+    def f(line):
         # [Example] -> [Example](Example.md)
         replaced_line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
         # [Example#example() link description] -> [link description](Example.md#example)
         replaced_line = re.sub(r"\[(?!http)([^ #\(]*?)(|#[^\(]*?)(?:\(\))? +(.*?)\]", r"[\3](\1.md\2)", replaced_line)
-        if line != replaced_line:
-            wiki = wiki.replace(line, replaced_line)
+        return replaced_line
 
-    return wiki
+    return apply_foreach_line_not_in_code_snippets(wiki, f)
 
 
 def convert_http_links(wiki):
@@ -74,12 +73,7 @@ def convert_comments(wiki):
 
 
 def convert_numbered_lists(wiki):
-    for line in lines_not_in_code_snippets(wiki):
-        replaced_line = line.replace("# ", "1. ")
-        if line != replaced_line:
-            wiki = wiki.replace(line, replaced_line)
-
-    return wiki
+    return apply_foreach_line_not_in_code_snippets(wiki, lambda line: line.replace("# ", "1. "))
 
 
 def convert_headers(wiki):
@@ -98,7 +92,7 @@ def convert_headers(wiki):
 def replace_summary(wiki):
     """If there is a #summary tag, set all headers one level below (e.g. # -> ##) and set #summary as h1"""
     if "#summary" in wiki:
-        wiki = wiki.replace("# ", "## ")
+        wiki = apply_foreach_line_not_in_code_snippets(wiki, lambda line: line.replace("# ", "## "))
         wiki = wiki.replace("#summary", '#')
     return wiki
 
@@ -127,6 +121,15 @@ def lines_not_in_code_snippets(wiki):
 
         if not in_snippets:
             yield line
+
+
+def apply_foreach_line_not_in_code_snippets(wiki, f):
+    for line in lines_not_in_code_snippets(wiki):
+        replaced_line = f(line)
+        if line != replaced_line:
+            wiki = wiki.replace(line, replaced_line)
+
+    return wiki
 
 
 if __name__ == '__main__':
