@@ -39,7 +39,8 @@ def remove_labels(wiki):
 
 def remove_internal_link_cancellations(wiki, project_name):
     if project_name:
-        wiki = wiki.replace("!" + project_name, project_name)
+        wiki = apply_foreach_line_not_in_code_snippets(wiki,
+                                                       lambda line: line.replace("!" + project_name, project_name))
     return wiki
 
 
