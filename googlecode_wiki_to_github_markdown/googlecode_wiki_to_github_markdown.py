@@ -7,7 +7,7 @@ def convert_to_md(wiki_file_name, project_name=None):
     with open(wiki_file_name) as f:
         wiki = f.read()
 
-    for line in lines_not_in_code_snippets(wiki):
+    def out_of_code_snippets_operations(line):
         replaced_line = remove_gplusone(line)
         replaced_line = remove_toc(replaced_line)
         replaced_line = remove_labels(replaced_line)
@@ -19,12 +19,12 @@ def convert_to_md(wiki_file_name, project_name=None):
         replaced_line = convert_headers(replaced_line)
         replaced_line = convert_comments(replaced_line)
 
-        if line != replaced_line:
-                wiki = wiki.replace(line, replaced_line)
+        return replaced_line
 
+    wiki = apply_foreach_line_not_in_code_snippets(wiki, out_of_code_snippets_operations)
     wiki = replace_summary(wiki)
 
-    wiki = convert_code_snippets_markers(wiki)
+    wiki = convert_code_snippet_markers(wiki)
 
     wiki = remove_extra_spaces(wiki)
     wiki = remove_extra_empty_lines(wiki)
@@ -93,7 +93,7 @@ def replace_summary(wiki):
     return wiki
 
 
-def convert_code_snippets_markers(wiki):
+def convert_code_snippet_markers(wiki):
     wiki = re.sub(r" *\{\{\{", "\n```", wiki)
     wiki = re.sub(r" *\}\}\}", "```\n", wiki)
     return wiki
