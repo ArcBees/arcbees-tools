@@ -66,16 +66,6 @@ def convert_http_links(line):
     return line
 
 
-def convert_code_snippets_markers(wiki):
-    wiki = re.sub(r" *\{\{\{", "\n```", wiki)
-    wiki = re.sub(r" *\}\}\}", "```\n", wiki)
-    return wiki
-
-
-def convert_comments(line):
-    return line.replace("<wiki:comment>", "<!---").replace("</wiki:comment>", "-->")
-
-
 def convert_numbered_lists(line):
     return line.replace("# ", "1. ")
 
@@ -91,11 +81,21 @@ def convert_headers(line):
     return line
 
 
+def convert_comments(line):
+    return line.replace("<wiki:comment>", "<!---").replace("</wiki:comment>", "-->")
+
+
 def replace_summary(wiki):
     """If there is a #summary tag, set all headers one level below (e.g. # -> ##) and set #summary as h1"""
     if "#summary" in wiki:
         wiki = apply_foreach_line_not_in_code_snippets(wiki, lambda line: line.replace("# ", "## "))
         wiki = wiki.replace("#summary", '#')
+    return wiki
+
+
+def convert_code_snippets_markers(wiki):
+    wiki = re.sub(r" *\{\{\{", "\n```", wiki)
+    wiki = re.sub(r" *\}\}\}", "```\n", wiki)
     return wiki
 
 
