@@ -7,17 +7,24 @@ def convert_to_md(wiki_file_name, project_name=None):
     with open(wiki_file_name) as f:
         wiki = f.read()
 
-    wiki = remove_gplusone(wiki)
-    wiki = remove_toc(wiki)
-    wiki = remove_labels(wiki)
-    wiki = remove_internal_link_cancellations(wiki, project_name)
+    for line in lines_not_in_code_snippets(wiki):
+        replaced_line = remove_gplusone(line)
+        replaced_line = remove_toc(replaced_line)
+        replaced_line = remove_labels(replaced_line)
+        replaced_line = remove_internal_link_cancellations(replaced_line, project_name)
 
-    wiki = convert_internal_links(wiki)
-    wiki = convert_http_links(wiki)
-    wiki = convert_numbered_lists(wiki)
-    wiki = convert_headers(wiki)
+        replaced_line = convert_internal_links(replaced_line)
+        replaced_line = convert_http_links(replaced_line)
+        replaced_line = convert_numbered_lists(replaced_line)
+        replaced_line = convert_headers(replaced_line)
+        replaced_line = convert_comments(replaced_line)
+
+        if line != replaced_line:
+                wiki = wiki.replace(line, replaced_line)
+
+    wiki = replace_summary(wiki)
+
     wiki = convert_code_snippets_markers(wiki)
-    wiki = convert_comments(wiki)
 
     wiki = remove_extra_spaces(wiki)
     wiki = remove_extra_empty_lines(wiki)
@@ -25,42 +32,38 @@ def convert_to_md(wiki_file_name, project_name=None):
     return wiki
 
 
-def remove_gplusone(wiki):
-    return re.sub(r"<g:plusone.*</g:plusone>", "", wiki)
+def remove_gplusone(line):
+    return re.sub(r"<g:plusone.*</g:plusone>", "", line)
 
 
-def remove_toc(wiki):
-    return re.sub(r"<wiki:toc.*/>", "", wiki)
+def remove_toc(line):
+    return re.sub(r"<wiki:toc.*/>", "", line)
 
 
-def remove_labels(wiki):
-    return re.sub(r"#labels.*", "", wiki)
+def remove_labels(line):
+    return re.sub(r"#labels.*", "", line)
 
 
-def remove_internal_link_cancellations(wiki, project_name):
+def remove_internal_link_cancellations(line, project_name):
     if project_name:
-        wiki = apply_foreach_line_not_in_code_snippets(wiki,
-                                                       lambda line: line.replace("!" + project_name, project_name))
-    return wiki
+        line = line.replace("!" + project_name, project_name)
+    return line
 
 
-def convert_internal_links(wiki):
-    def f(line):
-        # [Example] -> [Example](Example.md)
-        replaced_line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
-        # [Example#example() link description] -> [link description](Example.md#example)
-        replaced_line = re.sub(r"\[(?!http)([^ #\(]*?)(|#[^\(]*?)(?:\(\))? +(.*?)\]", r"[\3](\1.md\2)", replaced_line)
-        return replaced_line
-
-    return apply_foreach_line_not_in_code_snippets(wiki, f)
+def convert_internal_links(line):
+    # [Example] -> [Example](Example.md)
+    line = re.sub(r"\[(?!http)([^ ]*)\]", r"[\1](\1.md)", line)
+    # [Example#example() link description] -> [link description](Example.md#example)
+    line = re.sub(r"\[(?!http)([^ #\(]*?)(|#[^\(]*?)(?:\(\))? +(.*?)\]", r"[\3](\1.md\2)", line)
+    return line
 
 
-def convert_http_links(wiki):
+def convert_http_links(line):
     # Link only between brackets (no spaces) -> Remove brackets and ensure space after
-    wiki = re.sub(r"\[(http[^ ]*?)\] *", r"\1 ", wiki)
+    line = re.sub(r"\[(http[^ ]*?)\] *", r"\1 ", line)
     # Link with description
-    wiki = re.sub(r"\[(http.*?) +(.*?)\]", r"[\2](\1)", wiki)
-    return wiki
+    line = re.sub(r"\[(http.*?) +(.*?)\]", r"[\2](\1)", line)
+    return line
 
 
 def convert_code_snippets_markers(wiki):
@@ -69,25 +72,23 @@ def convert_code_snippets_markers(wiki):
     return wiki
 
 
-def convert_comments(wiki):
-    return wiki.replace("<wiki:comment>", "<!---").replace("</wiki:comment>", "-->")
+def convert_comments(line):
+    return line.replace("<wiki:comment>", "<!---").replace("</wiki:comment>", "-->")
 
 
-def convert_numbered_lists(wiki):
-    return apply_foreach_line_not_in_code_snippets(wiki, lambda line: line.replace("# ", "1. "))
+def convert_numbered_lists(line):
+    return line.replace("# ", "1. ")
 
 
-def convert_headers(wiki):
-    wiki = re.sub(r"^====== ?(.*[^ ]) ?======", r"###### \1", wiki, flags=re.MULTILINE)
-    wiki = re.sub(r"^===== ?(.*[^ ]) ?=====", r"##### \1", wiki, flags=re.MULTILINE)
-    wiki = re.sub(r"^==== ?(.*[^ ]) ?====", r"#### \1", wiki, flags=re.MULTILINE)
-    wiki = re.sub(r"^=== ?(.*[^ ]) ?===", r"### \1", wiki, flags=re.MULTILINE)
-    wiki = re.sub(r"^== ?(.*[^ ]) ?==", r"## \1", wiki, flags=re.MULTILINE)
-    wiki = re.sub(r"^= ?(.*[^ ]) ?=", r"# \1", wiki, flags=re.MULTILINE)
+def convert_headers(line):
+    line = re.sub(r"^====== ?(.*[^ ]) ?======", r"###### \1", line)
+    line = re.sub(r"^===== ?(.*[^ ]) ?=====", r"##### \1", line)
+    line = re.sub(r"^==== ?(.*[^ ]) ?====", r"#### \1", line)
+    line = re.sub(r"^=== ?(.*[^ ]) ?===", r"### \1", line)
+    line = re.sub(r"^== ?(.*[^ ]) ?==", r"## \1", line)
+    line = re.sub(r"^= ?(.*[^ ]) ?=", r"# \1", line)
 
-    wiki = replace_summary(wiki)
-
-    return wiki
+    return line
 
 
 def replace_summary(wiki):
